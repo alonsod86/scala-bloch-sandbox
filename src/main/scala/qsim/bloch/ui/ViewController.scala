@@ -9,7 +9,6 @@ import qsim.bloch.ui.components.Bloch
 import scalafx.Includes._
 import scalafx.scene._
 import scalafx.scene.paint.Color
-import scalafx.stage.Stage
 
 /**
   * Created by alonso on 15/06/2017.
@@ -35,7 +34,6 @@ object ViewController {
     this.sceneSize = sceneSize
     this.world = new View
 
-    //handleMouse(scene())
     buildScene()
   }
 
