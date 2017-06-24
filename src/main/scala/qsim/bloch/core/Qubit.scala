@@ -1,9 +1,15 @@
 package qsim.bloch.core
 
+import breeze.linalg.Matrix
+import breeze.math.Complex
+
 /**
   * Created by alonso on 18/06/2017.
   */
-class Qubit(var q0: Int = 1, var q1: Int = 0)  {
+class Qubit(var q0: Complex, var q1: Complex)  {
+
+  def apply(operator: Matrix[Complex]) = new Gate(operator).apply(this)
+  def apply(gate: Gate): Qubit = gate.apply(this)
 
   override def toString = s"Q($q0, $q1)"
 
