@@ -3,12 +3,22 @@ package qsim.bloch.core
 import breeze.linalg.Matrix
 import breeze.math.Complex
 
+object Qubit {
+  def ZERO = new Qubit(1, 0)
+  def ONE = new Qubit(0, 1)
+}
+
 /**
   * Created by alonso on 18/06/2017.
   */
 class Qubit(var q0: Complex, var q1: Complex)  {
 
+  def this(q0: Int, q1: Int) = {
+    this(Complex(q0, 0), Complex(q1, 0))
+  }
+
   def apply(operator: Matrix[Complex]) = new Gate(operator).apply(this)
+
   def apply(gate: Gate): Qubit = gate.apply(this)
 
   override def toString = s"Q($q0, $q1)"
