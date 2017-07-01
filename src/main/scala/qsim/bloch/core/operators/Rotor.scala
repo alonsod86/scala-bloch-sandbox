@@ -1,11 +1,10 @@
 package qsim.bloch.core.operators
 
 import breeze.linalg.{Matrix, Vector}
-import breeze.math.Complex
+import breeze.math.{Complex, _}
 import qsim.bloch.core.Qubit
 
 import scala.math.{round, _}
-import breeze.math._
 
 class BlochAxis (var x: Double, var y:Double, var z:Double) {
   def canEqual(other: Any): Boolean = other.isInstanceOf[BlochAxis]
@@ -41,13 +40,37 @@ class Rotor {
   var u21: Complex = null
   var u22: Complex = null
 
+  def cosine = (a: Double) => {round(cos(toDegrees(a)))}
+  def sine = (a: Double) => {round(sin(toDegrees(a)))}
+  def format = (a: Double) => {Complex(a, 0)}
+
+  /* exponentiation (e to a+bi) */
+  def exponential = (z: Complex) => {
+    if (z.imag == 0.0) {
+      Complex(StrictMath.exp(z.real), 1)
+    } else {
+      val ex = Complex(StrictMath.exp(z.real), 0) * Complex(StrictMath.cos(z.imag), StrictMath.sin(z.imag))
+      Complex(round(ex.real), round(ex.imag))
+    }
+  }
+
   def this(angle: Double, axis: BlochAxis) {
     this()
     if (axis == Axes.X_AXIS) {
-      this.u11 = Complex(round(cos(toDegrees(angle/2))), 0)
-      this.u12 = -i * round(sin(toDegrees(angle/2)))
-      this.u21 = -i * round(sin(toDegrees(angle/2)))
-      this.u22 = Complex(round(cos(toDegrees(angle/2))), 0)
+      this.u11 = format(cosine(angle/2))
+      this.u12 = -i * sine(angle/2)
+      this.u21 = -i * sine(angle/2)
+      this.u22 = format(cosine(angle/2))
+    } else if (axis == Axes.Y_AXIS) {
+      this.u11 = format(cosine(angle/2))
+      this.u12 = -format(sine(angle/2))
+      this.u21 = format(sine(angle/2))
+      this.u22 = format(cosine(angle/2))
+    } else if (axis == Axes.Z_AXIS) {
+      this.u11 = exponential(Complex(0, -toDegrees(angle/2)))
+      this.u12 = Complex.zero
+      this.u21 = Complex.zero
+      this.u22 = exponential(Complex(0, toDegrees(angle/2)))
     }
   }
 
@@ -57,4 +80,5 @@ class Rotor {
     val transformedStateVector: Vector[Complex] = operator * stateVector
     new Qubit(transformedStateVector(0), transformedStateVector(1))
   }
+
 }

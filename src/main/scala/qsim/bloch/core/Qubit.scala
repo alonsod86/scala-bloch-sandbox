@@ -2,6 +2,7 @@ package qsim.bloch.core
 
 import breeze.linalg.Matrix
 import breeze.math.Complex
+import qsim.bloch.core.operators.Rotor
 
 object Qubit {
   def ZERO = new Qubit(1, 0)
@@ -13,19 +14,18 @@ object Qubit {
   */
 class Qubit(var q0: Complex, var q1: Complex)  {
 
-  // amplitudes
-  var alpha: Double = 0
-  var beta: Double = 0
-
   def this(q0: Int, q1: Int) = {
     this(Complex(q0, 0), Complex(q1, 0))
   }
 
   /** Apply a transformation in it's matrix form over this qubit */
-  def apply(operator: Matrix[Complex]) = new Gate(operator).apply(this)
+  def apply(operator: Matrix[Complex]) = new Gate(operator)(this)
 
   /** Apply a transformation in it's gate form over this qubit */
-  def apply(gate: Gate): Qubit = gate.apply(this)
+  def apply(gate: Gate): Qubit = gate(this)
+
+  /** Apply a transformation using a rotor */
+  def apply(rotor: Rotor) = rotor(this)
 
   override def toString = s"Q($q0, $q1)"
 
