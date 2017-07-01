@@ -8,7 +8,7 @@ import qsim.bloch.core.operators.{Axes, Pauli, Rotor}
 /**
   * Created by alonso on 18/06/2017.
   */
-class Gate(var matrix: Matrix[Complex], var rotor: Rotor) {
+class Gate(private var matrix: Matrix[Complex], private var rotor: Rotor) {
 
   def this(matrix: Matrix[Complex]) {
     this(matrix, null)
@@ -16,17 +16,20 @@ class Gate(var matrix: Matrix[Complex], var rotor: Rotor) {
       case Pauli.X => new Rotor(Pi, Axes.X_AXIS)
       case Pauli.Y => new Rotor(Pi, Axes.Y_AXIS)
       case Pauli.Z => new Rotor(Pi, Axes.Z_AXIS)
-      case _ => null
       // TODO: implement n-axis rotation for non-basis
+      case _ => new Rotor(0, Axes.NONE)
     }
 
   }
 
   def apply(qubit: Qubit): Qubit = {
-    val qvector = Vector(qubit.q0, qubit.q1)
-    val output: Vector[Complex] = matrix * qvector
+    val state = Vector(qubit.q0, qubit.q1)
+    val output: Vector[Complex] = matrix * state
     new Qubit(output(0), output(1))
   }
 
-
+  def getRotor() = rotor
+  def getTransformation() = matrix
+  def angle() = getRotor().angle
+  def axis() = getRotor().axis
 }

@@ -18,6 +18,10 @@ class Qubit(var q0: Complex, var q1: Complex)  {
     this(Complex(q0, 0), Complex(q1, 0))
   }
 
+  def this(q0: Double, q1: Double) = {
+    this(Complex(q0, 0), Complex(q1, 0))
+  }
+
   /** Apply a transformation in it's matrix form over this qubit */
   def apply(operator: Matrix[Complex]) = new Gate(operator)(this).asInstanceOf[Qubit]
 
@@ -26,6 +30,14 @@ class Qubit(var q0: Complex, var q1: Complex)  {
 
   /** Apply a transformation using a rotor */
   def apply(rotor: Rotor) = rotor(this)
+
+  def / (d: Double) = {
+    new Qubit(this.q0 / d, this.q1 / d)
+  }
+
+  def / (c: Complex) = {
+    new Qubit(this.q0 / c, this.q1 / c)
+  }
 
   override def toString = s"Q($q0, $q1)"
 
