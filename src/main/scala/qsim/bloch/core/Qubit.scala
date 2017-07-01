@@ -19,7 +19,7 @@ class Qubit(var q0: Complex, var q1: Complex)  {
   }
 
   /** Apply a transformation in it's matrix form over this qubit */
-  def apply(operator: Matrix[Complex]) = new Gate(operator)(this)
+  def apply(operator: Matrix[Complex]) = new Gate(operator)(this).asInstanceOf[Qubit]
 
   /** Apply a transformation in it's gate form over this qubit */
   def apply(gate: Gate): Qubit = gate(this)

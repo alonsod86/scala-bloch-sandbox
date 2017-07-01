@@ -16,12 +16,13 @@ class Gate(var matrix: Matrix[Complex], var rotor: Rotor) {
       case Pauli.X => new Rotor(Pi, Axes.X_AXIS)
       case Pauli.Y => new Rotor(Pi, Axes.Y_AXIS)
       case Pauli.Z => new Rotor(Pi, Axes.Z_AXIS)
+      case _ => null
+      // TODO: implement n-axis rotation for non-basis
     }
 
   }
 
   def apply(qubit: Qubit): Qubit = {
-    rotor.apply(qubit)
     val qvector = Vector(qubit.q0, qubit.q1)
     val output: Vector[Complex] = matrix * qvector
     new Qubit(output(0), output(1))
