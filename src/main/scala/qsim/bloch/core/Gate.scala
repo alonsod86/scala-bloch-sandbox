@@ -5,6 +5,14 @@ import breeze.math.Complex
 import breeze.numerics.constants._
 import qsim.bloch.core.operators.{Axes, Pauli, Rotor}
 
+object Gates {
+  def X = new Gate(Pauli.X)
+  def Y = new Gate(Pauli.Y)
+  def Z = new Gate(Pauli.Z)
+  def I = new Gate(Pauli.I)
+  def H = new Gate(Pauli.H)
+}
+
 /**
   * Created by alonso on 18/06/2017.
   */

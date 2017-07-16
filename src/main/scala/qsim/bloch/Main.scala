@@ -1,17 +1,26 @@
 package qsim.bloch
 
+import javafx.application.Platform
+import javafx.embed.swing.JFXPanel
+
 import qsim.bloch.ui.ViewController
 
 import scalafx.application.JFXApp
 import scalafx.scene._
 import scalafx.scene.paint.Color
 
+// define a scala runnable
+class MyThread extends Runnable {
 
+  def run {
+    Main.main(null)
+  }
+
+}
 
 /**
   * Created by alonso on 12/06/2017.
   */
-
 object Main extends JFXApp { app =>
   System.setProperty("prism.dirtyopts", "false")
   private val parentScene : Group = new Group
@@ -32,6 +41,20 @@ object Main extends JFXApp { app =>
     ViewController.initMouseHandler(scene())
   }
 
-  ViewController.drawBlochSphere
-  ViewController.drawAxes
+  def drawBlochSphere() = {
+    draw(() => {
+      ViewController.drawBlochSphere
+      ViewController.drawAxes
+    })
+  }
+
+  def start(): Unit = {
+    new JFXPanel // avoid Toolkit initialization exception
+    new Thread(new MyThread).start
+  }
+
+  private def draw(callback: Runnable) = {
+    Platform.runLater(callback)
+  }
+
 }

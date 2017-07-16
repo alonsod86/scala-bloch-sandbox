@@ -23,7 +23,7 @@ object ViewController {
   private val rotateZ: Rotate = new Rotate(0, Rotate.Z_AXIS)
 
   private var root : Group = null
-  private var world : View = null
+  private var worldView : View = null
 
   def initScene(rootScene: Group, sceneSize: Double, axesScaleFactor: Double) = {
     // initialize components
@@ -32,7 +32,7 @@ object ViewController {
     // build basic scene with camera and mouse
     this.root = rootScene
     this.sceneSize = sceneSize
-    this.world = new View
+    this.worldView = new View
 
     buildScene()
   }
@@ -64,13 +64,13 @@ object ViewController {
   }
 
   def drawBlochSphere() {
-    world.children += new View {
+    worldView.children += new View {
       children += Bloch.buildSphere
     }
   }
 
   def drawAxes() {
-    world.children += new View {
+    worldView.children += new View {
       children ++= Seq(
         Bloch buildAxis Color.Yellow,
         Bloch buildAxis(Color.Green, Rotate.X_AXIS),
@@ -81,8 +81,9 @@ object ViewController {
   }
 
   private def buildScene() {
-    root.children += world
-    world.transforms addAll(rotateZ, rotateY, rotateX)
+    root.children += worldView
+    worldView.transforms addAll(rotateZ, rotateY, rotateX)
   }
 
+  def world():View = this.worldView
 }
