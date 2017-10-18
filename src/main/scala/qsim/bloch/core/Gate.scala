@@ -24,6 +24,8 @@ class Gate(private var matrix: Matrix[Complex], private var rotor: Rotor) {
       case Pauli.X => new Rotor(Pi, Axes.X_AXIS)
       case Pauli.Y => new Rotor(Pi, Axes.Y_AXIS)
       case Pauli.Z => new Rotor(Pi, Axes.Z_AXIS)
+      // TODO: implement hadamard rotation
+      // TODO: implement phase change rotors (S, T gates)
       // TODO: implement n-axis rotation for non-basis
       case _ => new Rotor(0, Axes.NONE)
     }
@@ -36,8 +38,12 @@ class Gate(private var matrix: Matrix[Complex], private var rotor: Rotor) {
     new Qubit(output(0), output(1))
   }
 
+  /** Returns the associated rotation operation to this gate */
   def getRotor() = rotor
+  /** Returns the matrix operator associated to this gate */
   def getTransformation() = matrix
+  /** Returns the angle of rotation in radians associated to this gate */
   def angle() = getRotor().angle
+  /** Returns the standard axis of rotation associated to this gate */
   def axis() = getRotor().axis
 }

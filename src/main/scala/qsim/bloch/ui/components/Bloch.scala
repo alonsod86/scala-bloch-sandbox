@@ -7,6 +7,9 @@ import javafx.scene.paint.PhongMaterial
 import javafx.scene.shape.{Cylinder, MeshView}
 import javafx.scene.transform.Rotate
 
+import qsim.bloch.core.operators.BlochAxis
+import qsim.bloch.ui.ViewController
+
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{DrawMode, Sphere}
 
@@ -44,7 +47,7 @@ object Bloch {
     * @param axis
     * @return
     */
-  def buildAxis(color: Color, axis: Point3D = null) = {
+  def buildAxis(color: Color, axis: BlochAxis = null) = {
     val vector = new Group
     val length = l * r
     val width = w * length
@@ -67,7 +70,7 @@ object Bloch {
     * @param axis
     * @return
     */
-  def buildStateVector(color: Color, axis: Point3D = null) = {
+  def buildStateVector(color: Color, axis: BlochAxis = null) = {
     val vector = new Group
     val length = r
     val width = w * length * 3
@@ -86,8 +89,33 @@ object Bloch {
 
     // rotation over base axis
     applyOrthogonalTransformation(axis, vector)
-
     vector.getChildren.addAll(ax, pointer)
+    vector
+  }
+
+  def rotateStateVector(vector: Group, axis: BlochAxis, theta: Double): Group = {
+    applyRotationTransformation(theta, axis, vector)
+  }
+
+  /**
+    * Given a vector, applies a specific rotation to build an orthogonal final state
+    * @param axis
+    * @param vector
+    * @return
+    */
+  private def applyOrthogonalTransformation(axis: BlochAxis, vector: Group): Group = {
+    if (axis != null) {
+      applyRotationTransformation(90, axis, vector)
+    } else {
+      vector
+    }
+  }
+
+  private def applyRotationTransformation(angle: Double, axis: BlochAxis, vector: Group): Group = {
+    val rotation = new Rotate
+    rotation.setAxis(ViewController.translateAxes(axis))
+    rotation.setAngle(angle)
+    vector.getTransforms.add(rotation)
     vector
   }
 
@@ -99,20 +127,4 @@ object Bloch {
     fxmlLoader.setLocation(getClass.getResource("/pyramid.fxml"))
     fxmlLoader.load.asInstanceOf[MeshView]
   }
-
-  /**
-    * Given a vector, applies a specific rotation to build an orthogonal final state
-    * @param axis
-    * @param vector
-    * @return
-    */
-  private def applyOrthogonalTransformation(axis: Point3D, vector: Group) = {
-    if (axis != null) {
-      val rotation = new Rotate
-      rotation.setAxis(axis)
-      rotation.setAngle(90)
-      vector.getTransforms.add(rotation)
-    }
-  }
-
 }

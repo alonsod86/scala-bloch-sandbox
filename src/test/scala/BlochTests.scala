@@ -1,7 +1,8 @@
-import javafx.application.Platform
-
 import org.scalatest.FlatSpec
-import qsim.bloch.Main
+import qsim.bloch.BlochSphere
+import qsim.bloch.core.Gate
+import qsim.bloch.core.Qubit._
+import qsim.bloch.core.operators.Pauli
 
 
 /**
@@ -9,12 +10,19 @@ import qsim.bloch.Main
   */
 class BlochTests extends FlatSpec {
 
-  "A Pauli X" should "rotate the bloch sphere from |0> to |1> along the Z axis" in {
-    Main.start()
+  "UI" should "work asynchronously" in {
+    BlochSphere.start()
+    Thread.sleep(800)
 
-    for (i<-0 to 2) {
-      Thread.sleep(1000)
-      Main.drawBlochSphere()
-    }
+    BlochSphere.
+      drawSphere().
+      draw(ZERO).
+      draw(ZERO, new Gate(Pauli.X))
+      // TODO: .apply([0..N], gate)
+    Thread.sleep(10000)
+  }
+
+  "A Pauli X" should "rotate the bloch sphere from |0> to |1> along the Z axis" in {
+
   }
 }

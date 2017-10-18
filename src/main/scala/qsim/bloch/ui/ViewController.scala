@@ -1,9 +1,11 @@
 package qsim.bloch.ui
 
+import javafx.geometry.Point3D
 import javafx.scene
 import javafx.scene.input.MouseEvent
 import javafx.scene.transform.{Rotate, Translate}
 
+import qsim.bloch.core.operators.{Axes, BlochAxis}
 import qsim.bloch.ui.components.Bloch
 
 import scalafx.Includes._
@@ -72,12 +74,25 @@ object ViewController {
   def drawAxes() {
     worldView.children += new View {
       children ++= Seq(
-        Bloch buildAxis Color.Yellow,
-        Bloch buildAxis(Color.Green, Rotate.X_AXIS),
-        Bloch buildAxis(Color.Blue, Rotate.Z_AXIS),
-        Bloch buildStateVector Color.Red
+        Bloch buildAxis(Color.Yellow, Axes.Z_AXIS),
+        Bloch buildAxis(Color.Green, Axes.Y_AXIS),
+        Bloch buildAxis(Color.Blue, Axes.X_AXIS)
       )
     }
+  }
+
+  def drawStateVector(color: Color, axis: BlochAxis = null): Group = {
+    val vector = Bloch buildStateVector(color, axis)
+    worldView.children += new View {
+      children += vector
+    }
+    vector
+  }
+
+  def rotateStateVector(vector: Group, theta: Double): Group = {
+    // TODO: refactor. X_AXIS fixed rotation...
+    val rotated = Bloch rotateStateVector(vector, Axes.X_AXIS, theta)
+    rotated
   }
 
   private def buildScene() {
@@ -86,4 +101,37 @@ object ViewController {
   }
 
   def world():View = this.worldView
+
+  /** Translates from scalaFX axes to qsim axes (the standard system) */
+  def translateAxes(fxAxis: Point3D): BlochAxis = {
+    // Z_AXIS = y
+    // Y_AXIS = z
+    // X_AXIS = x
+
+    if (fxAxis.equals(Rotate.X_AXIS)) {
+      Axes.X_AXIS
+    } else if (fxAxis.equals(Rotate.Y_AXIS)) {
+      Axes.Z_AXIS
+    } else if (fxAxis.equals(Rotate.Z_AXIS)) {
+      Axes.Y_AXIS
+    } else {
+      Axes.NONE
+    }
+  }
+
+  def translateAxes(qsimAxis: BlochAxis): Point3D = {
+    // Z_AXIS = y
+    // Y_AXIS = z
+    // X_AXIS = x
+
+    if (qsimAxis.equals(Axes.X_AXIS)) {
+      Rotate.X_AXIS
+    } else if (qsimAxis.equals(Axes.Y_AXIS)) {
+      Rotate.Z_AXIS
+    } else if (qsimAxis.equals(Axes.Z_AXIS)) {
+      Rotate.Y_AXIS
+    } else {
+      null
+    }
+  }
 }

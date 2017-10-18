@@ -14,6 +14,8 @@ object Qubit {
   */
 class Qubit(var q0: Complex, var q1: Complex)  {
 
+  // TODO: Define theta and phi
+
   def this(q0: Int, q1: Int) = {
     this(Complex(q0, 0), Complex(q1, 0))
   }
